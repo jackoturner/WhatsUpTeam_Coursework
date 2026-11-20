@@ -44,3 +44,5 @@ docker compose -f compose.yaml up --build --detach --wait
 ```
 
 Running `npm run dev` switches the stack back to development mode.
+
+sample branch added
