@@ -60,12 +60,18 @@ for HTTP development; set `SESSION_COOKIE_SECURE=true` when serving the app over
 Login attempts are limited to five per client IP per minute in the backend process; use a
 shared rate-limit store if deploying multiple backend workers or instances.
 
-The MySQL init script creates only the authentication tables; it does not add organizations
-or users. Provision real users through an approved administrative process, storing
-`password_hash` values produced by `app.services.auth.hash_password`. For databases whose
-`mysql_data` volume already exists, apply
-[`001_auth.sql`](infrastructure/database/init/001_auth.sql) once manually; init scripts are
-only run automatically for a new MySQL volume. No test-user SQL or demo accounts are kept.
+The MySQL init script creates the authentication tables and seeds two demo users into a
+new database volume: `bob` (employee) and `bobadmin` (organisation admin), both with the
+password `password`. Their passwords are stored as salted PBKDF2 hashes in
+[`001_auth.sql`](infrastructure/database/init/001_auth.sql). These fixed-password accounts
+are for local development only; never use them in a deployed environment. Init scripts
+only run automatically for a new `mysql_data` volume, so an existing volume will not be
+seeded automatically.
+
+Provision real users through an approved administrative process, storing `password_hash`
+values produced by `app.services.auth.hash_password`. For databases whose `mysql_data`
+volume already exists, apply
+[`001_auth.sql`](infrastructure/database/init/001_auth.sql) once manually if needed.
 
 Run the backend authentication tests locally from `src/backend` with `python -m pytest`.
 To run the browser smoke and acceptance tests:
