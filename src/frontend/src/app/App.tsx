@@ -5,8 +5,11 @@ import { navigate, useLocation } from '../hooks/useRoute';
 import type { Route } from '../hooks/useRoute';
 import type { WhatsUpApi } from '../types/api';
 import AppShell from './AppShell';
+import AuditScreen from './screens/audit/AuditScreen';
+import ChatsScreen from './screens/chats/ChatsScreen';
 import LoginScreen from './screens/login/LoginScreen';
 import NotFoundScreen from './screens/notfound/NotFoundScreen';
+import ReportingScreen from './screens/reporting/ReportingScreen';
 import styles from './AppShell.module.css';
 
 // Every route missing from this list needs a session, so new screens are protected by default.
@@ -26,6 +29,13 @@ function Screen({ route, search }: { route: Route; search: URLSearchParams }) {
       return <LoginScreen search={search} />;
     case 'not_found':
       return <NotFoundScreen />;
+    case 'reporting':
+      // Keyed on the message so a different message always starts with an empty form.
+      return <ReportingScreen key={search.get('message') ?? ''} search={search} />;
+    case 'audit':
+      return <AuditScreen />;
+    case 'chats':
+      return <ChatsScreen />;
     default:
       return <p className={styles.placeholder}>Page content will appear here.</p>;
   }

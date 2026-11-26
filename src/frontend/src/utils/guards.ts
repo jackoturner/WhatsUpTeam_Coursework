@@ -22,6 +22,14 @@ export function readNumber(record: JsonRecord, key: string): number {
   return value;
 }
 
+export function readBoolean(record: JsonRecord, key: string): boolean {
+  const value = record[key];
+  if (typeof value !== 'boolean') {
+    throw new TypeError(`Expected "${key}" to be a boolean.`);
+  }
+  return value;
+}
+
 export function readNullableString(record: JsonRecord, key: string): string | null {
   const value = record[key];
   if (value === null || value === undefined) {
@@ -37,6 +45,14 @@ export function readRecord(record: JsonRecord, key: string): JsonRecord {
   const value = record[key];
   if (!isRecord(value)) {
     throw new TypeError(`Expected "${key}" to be an object.`);
+  }
+  return value;
+}
+
+export function readArray(record: JsonRecord, key: string): unknown[] {
+  const value = record[key];
+  if (!Array.isArray(value)) {
+    throw new TypeError(`Expected "${key}" to be an array.`);
   }
   return value;
 }

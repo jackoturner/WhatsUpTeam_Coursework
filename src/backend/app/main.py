@@ -7,7 +7,9 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from app.controllers.admin import router as admin_router
 from app.controllers.auth import router as auth_router
+from app.controllers.messaging import router as messaging_router
 from app.database import get_db
 
 logger = logging.getLogger(__name__)
@@ -19,6 +21,8 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
 )
 app.include_router(auth_router, prefix="/api")
+app.include_router(messaging_router, prefix="/api")
+app.include_router(admin_router, prefix="/api")
 
 
 @app.exception_handler(SQLAlchemyError)

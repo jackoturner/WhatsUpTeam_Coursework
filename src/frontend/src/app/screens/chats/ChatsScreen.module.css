@@ -1,0 +1,164 @@
+/* Dark palette matching the workspace shell (AppShell.module.css). */
+.chat {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  height: min(70vh, 640px);
+  min-height: 420px;
+  border: 1px solid #302a43;
+  border-radius: 12px;
+  background: #171425;
+  color: #f3efff;
+  overflow: hidden;
+}
+
+.list {
+  border-right: 1px solid #302a43;
+  overflow-y: auto;
+}
+
+.conversations {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+}
+
+.conversation {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #aaa4bc;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.conversation:hover { color: #f7f3ff; background: #1c172b; }
+
+.conversation[aria-current="true"] {
+  border-color: #3a285b;
+  color: #d3b5ff;
+  background: linear-gradient(100deg, #34204f, #241837);
+}
+
+.thread {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.threadTitle {
+  margin: 0;
+  padding: 14px 18px;
+  border-bottom: 1px solid #302a43;
+  color: #f5f1ff;
+  font-size: 1rem;
+}
+
+.messages {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  margin: 0;
+  padding: 16px 18px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.messages li { max-width: 70%; }
+
+.theirs { justify-self: start; }
+.mine { justify-self: end; }
+
+.meta {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: #8d87a2;
+  font-size: 0.78rem;
+}
+
+.author { font-weight: 700; color: #c9bfe0; }
+
+.body {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #241d38;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.mine .body { background: #4a2d80; }
+
+.report {
+  display: inline-block;
+  margin-top: 4px;
+  color: #b58cff;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.muted {
+  margin: 0;
+  padding: 16px 18px;
+  color: #a7a0b7;
+}
+
+.info {
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid #3a285b;
+  border-radius: 10px;
+  background: #1d1930;
+  color: #d6cfe6;
+}
+
+.notice {
+  margin: 0 18px 8px;
+  padding: 10px 14px;
+  border: 1px solid #6b2c3d;
+  border-radius: 10px;
+  background: #2a1620;
+  color: #ffc9d3;
+}
+
+.composer {
+  display: flex;
+  gap: 10px;
+  padding: 12px 18px;
+  border-top: 1px solid #302a43;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #3a3352;
+  border-radius: 10px;
+  background: #100d1c;
+  color: #f3efff;
+  font: inherit;
+}
+
+.input::placeholder { color: #7d7793; }
+
+/* Stack the conversation list above the thread on narrow screens. */
+@media (max-width: 640px) {
+  .chat {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    height: auto;
+    min-height: 0;
+  }
+  .list { border-right: 0; border-bottom: 1px solid #302a43; }
+  .conversations { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; }
+  .thread { min-height: 360px; }
+  .messages li { max-width: 88%; }
+}

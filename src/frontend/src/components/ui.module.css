@@ -78,3 +78,25 @@
 }
 .badgeBrand { color: #fff; background: var(--primary); border-color: var(--primary); }
 .badgeDanger { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+/* Page header (dark workspace palette from AppShell.module.css) */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #f3efff;
+}
+.pageIcon {
+  display: grid;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid #3a285b;
+  border-radius: 12px;
+  background: #211830;
+  color: #c79bff;
+}
+.pageIcon svg { width: 24px; height: 24px; }
+.pageTitle { margin: 0; color: #f5f1ff; font-size: 1.25rem; }
+.pageDescription { margin: 2px 0 0; color: #a7a0b7; font-size: 0.9rem; }
