@@ -10,7 +10,10 @@ npm run dev
 ```
 
 The command creates `.env` from `.env.example` if needed, builds the development
-images, and starts MySQL, FastAPI, and Vite. Open **http://localhost:3000**.
+images, and starts MySQL, phpMyAdmin, FastAPI, and Vite. Open **http://localhost:3000**.
+To view or edit the local MySQL database, open **http://localhost:8081** in your browser
+and sign in with `MYSQL_USER` and `MYSQL_PASSWORD` from `.env` (the example values work
+for local development).
 The terminal stays attached to the logs; **Ctrl+C** stops the services.
 
 Hot reload is enabled by default through `compose.override.yaml`:
@@ -28,7 +31,12 @@ restart `npm run dev` to rebuild or recreate the affected services.
 
 For detached development, use `docker compose up --build --detach --wait`.
 Use `npm run logs` to follow logs and `npm run stop` to stop the stack. Database
-data is preserved when stopping services.
+data is preserved when stopping services. MySQL stores its data in Docker's
+`mysql_data` named volume rather than a folder in the repository; this avoids
+committing database files and lets Docker manage the database format. Use phpMyAdmin
+or SQL scripts to inspect and change data, rather than editing the volume files directly.
+The phpMyAdmin port is bound to this computer only; set `PHPMYADMIN_PORT` in `.env`
+to change its host port.
 
 Run frontend type checking and the production asset build with
 `npm --prefix frontend run build`. Vite transforms TypeScript during development;
