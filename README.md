@@ -45,4 +45,16 @@ docker compose -f compose.yaml up --build --detach --wait
 
 Running `npm run dev` switches the stack back to development mode.
 
+## Sign-in and tests
+
+The login screen (FE-02 #7) is at **/login**. The back-office has no sign-in endpoint yet
+(BE-03 #6), so on the live stack the screen says so. To try it, run the tests:
+
+```sh
+bash test/run-tests.sh
+```
+
+They leave a mock build of the front on **http://127.0.0.1:3001** with fictional demo
+accounts. See [test/README.md](test/README.md) for the accounts and the PowerShell commands.
+
 Testing
