@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './app/App';
-import { loadApi } from './services/api';
+import { liveApi } from './services/liveApi';
 import './styles/global.css';
 
 const rootElement = document.getElementById('root');
@@ -12,14 +12,8 @@ if (rootElement === null) {
 
 const root = createRoot(rootElement);
 
-loadApi()
-  .then((api) => {
-    root.render(
-      <StrictMode>
-        <App api={api} />
-      </StrictMode>,
-    );
-  })
-  .catch(() => {
-    rootElement.textContent = 'WhatsUpTeam could not start. Please reload the page.';
-  });
+root.render(
+  <StrictMode>
+    <App api={liveApi} />
+  </StrictMode>,
+);

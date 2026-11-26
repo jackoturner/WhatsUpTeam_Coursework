@@ -9,7 +9,7 @@ import type { User } from '../../types/api';
 // The front only remembers *who* is signed in, never a token.
 export type AuthState =
   | { status: 'loading' }
-  | { status: 'anonymous'; authAvailable: boolean }
+  | { status: 'anonymous' }
   | { status: 'authenticated'; user: User };
 
 interface AuthContextValue {
@@ -33,8 +33,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .then((user) => {
         if (active) setState({ status: 'authenticated', user });
       })
-      .catch((error: unknown) => {
-        if (active) setState({ status: 'anonymous', authAvailable: !isApiError(error, 'not_available') });
+      .catch(() => {
+        if (active) setState({ status: 'anonymous' });
       });
     return () => {
       active = false;
@@ -54,14 +54,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await api.auth.logout();
     } finally {
       // Forget the user locally even if the server call failed.
-      setState({ status: 'anonymous', authAvailable: true });
+      setState({ status: 'anonymous' });
       navigate('/login', { replace: true });
     }
   }, [api]);
 
   const handleError = useCallback((error: unknown) => {
     if (isApiError(error, 'unauthenticated')) {
-      setState({ status: 'anonymous', authAvailable: true });
+      setState({ status: 'anonymous' });
       navigate('/login?expired=1', { replace: true });
     }
     return errorMessage(error);

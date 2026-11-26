@@ -11,9 +11,6 @@ EXPOSE 8080
 CMD ["npm", "run", "dev", "--", "--port", "8080", "--strictPort"]
 
 FROM base AS build
-# "mock" builds the in-memory demo API (see test/README.md); default is the live back-office.
-ARG VITE_API_MODE=live
-ENV VITE_API_MODE=${VITE_API_MODE}
 RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:stable-alpine AS runtime

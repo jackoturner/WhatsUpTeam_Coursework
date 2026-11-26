@@ -17,7 +17,7 @@ services:
         - >-
           MYSQL_PWD="$${MYSQL_PASSWORD}" mysql --protocol=TCP
           --host=127.0.0.1 --user="$${MYSQL_USER}" --database="$${MYSQL_DATABASE}"
-          --execute='SELECT message FROM greetings WHERE id = 1' > /dev/null
+          --execute='SELECT 1' > /dev/null
       interval: 5s
       timeout: 5s
       retries: 20
@@ -34,6 +34,7 @@ services:
       DB_NAME: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
       DB_USER: ${MYSQL_USER:?Set MYSQL_USER in .env}
       DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
     depends_on:
       database:
         condition: service_healthy

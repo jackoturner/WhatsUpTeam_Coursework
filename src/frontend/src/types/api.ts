@@ -1,5 +1,4 @@
-// Shapes of the sign-in part of the API contract (proposal for SH-01, issue #4).
-// The backend owns every rule; these types only describe what the front expects back.
+// Shapes of the sign-in contract. The backend owns authentication and authorization rules.
 
 export type Role = 'employee' | 'group_manager' | 'org_admin';
 
@@ -19,11 +18,7 @@ export interface User {
   avatar_url: string | null;
 }
 
-/** One implementation talks to FastAPI (live), the other is an in-browser demo (mock). */
 export interface WhatsUpApi {
-  mode: 'live' | 'mock';
-  /** Mock mode only: the fictional demo accounts shown on the login screen. */
-  demoNotice?: string;
   auth: {
     me(): Promise<User>;
     login(username: string, password: string): Promise<User>;

@@ -14,13 +14,13 @@ esac
 
 if [ ! -f .env ]; then
   cp .env.example .env
-  echo "Created .env from .env.example (local demo credentials)."
+  echo "Created .env from .env.example."
 fi
 
 compose=(docker compose -f compose.yaml -f test/compose.test.yaml --profile test)
 
-echo "== Starting the stack (database, backend, frontend :3000, frontend-mock :3001)…"
-"${compose[@]}" up --build --detach --wait frontend frontend-mock
+echo "== Starting the stack (database, backend, frontend :3000)…"
+"${compose[@]}" up --build --detach --wait frontend
 
 echo "== Running: pytest ${target}"
 # shellcheck disable=SC2086  # word splitting of $target is intended

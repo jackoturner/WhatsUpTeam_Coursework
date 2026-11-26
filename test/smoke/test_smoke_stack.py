@@ -51,11 +51,10 @@ def test_backend_health_through_the_proxy(http, live_url):
     assert response.json() == {"status": "ok"}
 
 
-def test_database_greeting_through_the_proxy(http, live_url):
-    response = http.get(f"{live_url}/api/greetings/hello")
+def test_unauthenticated_auth_endpoint_rejects_access(http, live_url):
+    response = http.get(f"{live_url}/api/auth/me")
 
-    assert response.status_code == 200
-    assert response.json() == {"message": "hello"}
+    assert response.status_code == 401
 
 
 def test_configured_baseline_headers_are_still_present(http, live_url):
@@ -71,4 +70,4 @@ def test_configured_baseline_headers_are_still_present(http, live_url):
 def test_application_boots_in_a_real_browser(page, live_url):
     page.goto(f"{live_url}/")
 
-    expect(page.get_by_role("heading", name="A simple hello.")).to_be_visible()
+    expect(page.get_by_role("heading", name="Sign in")).to_be_visible()

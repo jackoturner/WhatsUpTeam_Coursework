@@ -2,11 +2,25 @@
 // for every unknown path (try_files ... /index.html).
 import { useSyncExternalStore } from 'react';
 
-export type Route = { name: 'home' } | { name: 'login' } | { name: 'not_found' };
+export type WorkspaceRouteName =
+  | 'chats'
+  | 'contacts'
+  | 'groups'
+  | 'settings'
+  | 'reporting'
+  | 'audit';
+
+export type Route = { name: WorkspaceRouteName } | { name: 'login' } | { name: 'not_found' };
 
 const STATIC_ROUTES: Record<string, Route> = {
-  '/': { name: 'home' },
+  '/': { name: 'chats' },
+  '/chats': { name: 'chats' },
   '/login': { name: 'login' },
+  '/contacts': { name: 'contacts' },
+  '/groups': { name: 'groups' },
+  '/settings': { name: 'settings' },
+  '/reporting': { name: 'reporting' },
+  '/audit': { name: 'audit' },
 };
 
 export function parsePath(pathname: string): Route {

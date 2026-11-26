@@ -47,14 +47,31 @@ Running `npm run dev` switches the stack back to development mode.
 
 ## Sign-in and tests
 
-The login screen (FE-02 #7) is at **/login**. The back-office has no sign-in endpoint yet
-(BE-03 #6), so on the live stack the screen says so. To try it, run the tests:
+The login screen is at **/login** and uses the FastAPI authentication API:
+
+- `POST /api/auth/login` verifies a username and password and sets an HttpOnly session cookie.
+- `POST /api/auth/logout` revokes the current database session.
+- `GET /api/auth/me` returns the authenticated user or `401`.
+
+Passwords are stored as PBKDF2-HMAC-SHA256 hashes. Session tokens are random, expire
+after eight hours, and are stored hashed in MySQL. State-changing authentication requests
+use a double-submit CSRF token. The local Compose stack disables the cookie `Secure` flag
+for HTTP development; set `SESSION_COOKIE_SECURE=true` when serving the app over HTTPS.
+Login attempts are limited to five per client IP per minute in the backend process; use a
+shared rate-limit store if deploying multiple backend workers or instances.
+
+The MySQL init script creates only the authentication tables; it does not add organizations
+or users. Provision real users through an approved administrative process, storing
+`password_hash` values produced by `app.services.auth.hash_password`. For databases whose
+`mysql_data` volume already exists, apply
+[`001_auth.sql`](infrastructure/database/init/001_auth.sql) once manually; init scripts are
+only run automatically for a new MySQL volume. No test-user SQL or demo accounts are kept.
+
+Run the backend authentication tests locally from `src/backend` with `python -m pytest`.
+To run the browser smoke and acceptance tests:
 
 ```sh
 bash test/run-tests.sh
 ```
 
-They leave a mock build of the front on **http://127.0.0.1:3001** with fictional demo
-accounts. See [test/README.md](test/README.md) for the accounts and the PowerShell commands.
-
-Testing
+See [test/README.md](test/README.md) for Docker and PowerShell commands.
