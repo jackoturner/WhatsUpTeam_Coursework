@@ -1,0 +1,18 @@
+# Test overlay for the WhatsUp stack — never used on its own. From the repository root:
+#   docker compose -f compose.yaml -f test/compose.test.yaml --profile test run --rm tests
+# Paths are relative to the first file (the repository root).
+services:
+  # Test runner: pytest + Playwright (Chromium) on the internal app network.
+  tests:
+    profiles: [test]
+    build:
+      context: ./test
+    environment:
+      LIVE_BASE_URL: http://frontend:8080
+    depends_on:
+      frontend:
+        condition: service_healthy
+    networks:
+      - app
+    volumes:
+      - ./test/reports:/tests/reports
