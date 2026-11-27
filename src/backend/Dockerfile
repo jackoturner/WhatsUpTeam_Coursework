@@ -17,7 +17,10 @@ COPY pyproject.toml ./
 CMD ["python", "-m", "pytest"]
 
 FROM base AS application
-RUN groupadd --system app && useradd --system --gid app app
+RUN groupadd --system app \
+    && useradd --system --gid app app \
+    && mkdir -p /var/lib/whatsup/attachments \
+    && chown -R app:app /var/lib/whatsup
 COPY --chown=app:app app/ ./app/
 USER app
 EXPOSE 8000

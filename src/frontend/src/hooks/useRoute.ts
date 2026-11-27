@@ -4,29 +4,49 @@ import { useSyncExternalStore } from 'react';
 
 export type WorkspaceRouteName =
   | 'chats'
+  | 'files'
   | 'contacts'
   | 'groups'
   | 'settings'
   | 'reporting'
-  | 'audit';
+  | 'audit'
+  | 'admin_users'
+  | 'admin_roles'
+  | 'admin_organisation';
 
-export type Route = { name: WorkspaceRouteName } | { name: 'login' } | { name: 'not_found' };
+export type Route =
+  | { name: 'chats'; conversationId?: string }
+  | { name: Exclude<WorkspaceRouteName, 'chats'> }
+  | { name: 'login' | 'not_found' | 'forbidden' };
 
 const STATIC_ROUTES: Record<string, Route> = {
   '/': { name: 'chats' },
   '/chats': { name: 'chats' },
+  '/chat': { name: 'chats' },
   '/login': { name: 'login' },
+  '/files': { name: 'files' },
   '/contacts': { name: 'contacts' },
   '/groups': { name: 'groups' },
   '/settings': { name: 'settings' },
+  '/account': { name: 'settings' },
   '/reporting': { name: 'reporting' },
   '/audit': { name: 'audit' },
+  '/admin/audit': { name: 'audit' },
+  '/admin/users': { name: 'admin_users' },
+  '/admin/roles': { name: 'admin_roles' },
+  '/admin/organisation': { name: 'admin_organisation' },
+  '/403': { name: 'forbidden' },
+  '/404': { name: 'not_found' },
 };
 
 export function parsePath(pathname: string): Route {
   const staticRoute = STATIC_ROUTES[pathname];
   if (staticRoute !== undefined) {
     return staticRoute;
+  }
+  const conversation = /^\/chat\/([1-9]\d{0,8})$/.exec(pathname);
+  if (conversation !== null) {
+    return { name: 'chats', conversationId: conversation[1] };
   }
   return { name: 'not_found' };
 }

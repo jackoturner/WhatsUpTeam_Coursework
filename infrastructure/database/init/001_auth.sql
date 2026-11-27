@@ -2,7 +2,6 @@ CREATE TABLE organisations (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-
 CREATE TABLE users (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(32) NOT NULL UNIQUE,
@@ -28,28 +27,3 @@ CREATE TABLE auth_sessions (
     CONSTRAINT fk_auth_sessions_user
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-
-INSERT INTO organisations (name) VALUES ('Demo Organisation');
-SET @demo_organisation_id = LAST_INSERT_ID();
-
-INSERT INTO users (
-    username,
-    display_name,
-    password_hash,
-    role,
-    organisation_id
-) VALUES
-    (
-        'bob',
-        'Bob',
-        'pbkdf2_sha256$600000$7bO1gJB_5CMl6DH7YUbqIQ$4cc3438895615b345f9410526c834ab048849f3ffaec267afb4dd35bc13f9d11',
-        'employee',
-        @demo_organisation_id
-    ),
-    (
-        'bobadmin',
-        'BobAdmin',
-        'pbkdf2_sha256$600000$bvaJez5zUAzz4EmgzLjFdA$4e51d57ddf86f60dbb82f30bb3ee58ed6be9a65359834f18b7dc5ea231350b76',
-        'org_admin',
-        @demo_organisation_id
-    );

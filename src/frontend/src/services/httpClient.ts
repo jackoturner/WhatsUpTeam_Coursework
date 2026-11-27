@@ -12,6 +12,9 @@ type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 interface RequestOptions {
   json?: unknown;
+  body?: BodyInit;
+  contentType?: string;
+  headers?: HeadersInit;
 }
 
 function readCookie(name: string): string | null {
@@ -77,11 +80,17 @@ export async function request(
   options: RequestOptions = {},
 ): Promise<unknown> {
   const headers = new Headers({ Accept: 'application/json' });
+  new Headers(options.headers).forEach((value, key) => headers.set(key, value));
   let body: BodyInit | undefined;
 
   if (options.json !== undefined) {
     headers.set('Content-Type', 'application/json');
     body = JSON.stringify(options.json);
+  } else if (options.body !== undefined) {
+    body = options.body;
+    if (options.contentType !== undefined) {
+      headers.set('Content-Type', options.contentType);
+    }
   }
 
   if (method !== 'GET') {

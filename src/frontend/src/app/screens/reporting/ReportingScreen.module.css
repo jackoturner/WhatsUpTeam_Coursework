@@ -1,86 +1,169 @@
-/* Dark palette matching the workspace shell (AppShell.module.css). */
+.dialog {
+  width: min(94vw, 900px);
+  max-height: 90vh;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.dialog::backdrop {
+  background: rgb(11 31 53 / 48%);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.dialogHeader h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 18px;
+}
+
+.dialogHeader p {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.dialogClose {
+  padding: 0 3px;
+  border: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .form {
   display: grid;
   width: 100%;
   gap: 16px;
-  color: #f3efff;
+  padding: 18px 20px;
+  color: var(--color-text-primary);
 }
 
-.row { margin: 0; padding: 10px 12px; border: 1px solid #302a43; border-radius: 10px; background: #1d1930; }
+.row {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
+}
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr);
   gap: 16px;
   align-items: start;
 }
 
-.column { display: grid; gap: 16px; min-width: 0; }
+.column {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
 
 .card {
   display: grid;
-  gap: 12px;
+  gap: 11px;
   min-width: 0;
   margin: 0;
-  padding: 16px;
-  border: 1px solid #302a43;
-  border-radius: 12px;
-  background: #171425;
+  padding: 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .cardTitle {
   margin: 0;
-  color: #f5f1ff;
-  font-size: 1rem;
+  color: var(--color-text-primary);
+  font-size: 14px;
 }
 
-.muted { margin: 0; color: #a7a0b7; font-size: 0.9rem; }
+.muted {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
 
 .quote {
   display: grid;
   gap: 8px;
-  padding: 12px;
-  border: 1px solid #302a43;
-  border-radius: 10px;
-  background: #1d1930;
+  padding: 11px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-subtle);
 }
 
-.quoteHead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.quoteHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
 
 .avatar {
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   place-items: center;
   border-radius: 50%;
-  background: #3a3352;
-  color: #f5f1ff;
-  font-size: 0.75rem;
+  color: var(--color-primary-active);
+  background: var(--color-blue-subtle);
+  font-size: 10px;
   font-weight: 700;
 }
 
-.author { font-weight: 700; }
+.author {
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
 
-.quoteBody { margin: 0; line-height: 1.6; overflow-wrap: anywhere; }
+.quoteBody {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
 
 .option {
   display: flex;
+  min-height: 32px;
   align-items: center;
   gap: 10px;
-  min-height: 32px;
+  color: var(--color-text-primary);
+  font-size: 12px;
   cursor: pointer;
 }
 
-.option input { accent-color: #a777ff; width: 18px; height: 18px; flex: none; }
+.option input {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  accent-color: var(--color-primary);
+}
 
 .textarea {
   width: 100%;
   min-height: 84px;
-  padding: 10px 12px;
-  border: 1px solid #3a3352;
-  border-radius: 10px;
-  background: #100d1c;
-  color: #f3efff;
+  padding: 9px 10px;
+  border: 1px solid #aebdcd;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  background: #fff;
   font: inherit;
   resize: vertical;
 }
@@ -88,61 +171,87 @@
 .badge {
   padding: 2px 8px;
   border-radius: 999px;
-  background: #3b2a63;
-  color: #d6c4ff;
-  font-size: 0.75rem;
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+  font-size: 10px;
   font-weight: 700;
 }
 
-/* Neutral information panel: used for guidance, not for errors. */
 .info {
   margin: 0;
-  padding: 12px 16px;
-  border: 1px solid #3a285b;
-  border-radius: 10px;
-  background: #1d1930;
-  color: #d6cfe6;
+  padding: 12px 14px;
+  border: 1px solid #bfd4ef;
+  border-radius: var(--radius-md);
+  color: var(--color-primary-active);
+  background: var(--color-blue-subtle);
 }
 
 .notice {
   margin: 0;
-  padding: 12px 16px;
-  border: 1px solid #6b2c3d;
-  border-radius: 10px;
-  background: #2a1620;
-  color: #ffc9d3;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: #991b1b;
+  background: var(--color-danger-bg);
 }
 
-.actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 12px; }
-
-.submit { background: #7c4dff; border-color: #7c4dff; color: #ffffff; }
-.submit:hover:not(:disabled) { background: #6a3cf0; }
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
 
 .steps {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   margin: 0;
-  padding: 0;
-  list-style: none;
+  padding-left: 20px;
 }
 
-.steps li { display: grid; gap: 2px; }
-.steps span { color: #a7a0b7; font-size: 0.9rem; }
+.steps li {
+  display: grid;
+  gap: 2px;
+  color: var(--color-text-primary);
+}
+
+.steps span {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
 
 .sent {
   display: grid;
-  gap: 12px;
   justify-items: start;
-  max-width: 36rem;
-  padding: 16px;
-  border: 1px solid #302a43;
-  border-radius: 12px;
-  background: #171425;
+  gap: 12px;
+  padding: 18px;
 }
 
-.sent h2 { margin: 0; color: #f5f1ff; }
-.sent p { margin: 0; color: #a7a0b7; }
+.sent h2 {
+  margin: 0;
+  color: var(--color-success);
+}
+
+.sent p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
 
 @media (max-width: 860px) {
-  .layout { grid-template-columns: minmax(0, 1fr); }
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .dialog {
+    width: calc(100vw - 20px);
+    max-height: 92vh;
+  }
+
+  .dialogHeader,
+  .form {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
 }

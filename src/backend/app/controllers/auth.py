@@ -11,14 +11,17 @@ from app.services.auth import (
     COOKIE_SECURE,
     SESSION_COOKIE,
     authenticate,
+    change_password,
     create_session,
     current_user,
     login_rate_limiter,
     revoke_session,
     set_csrf_cookie,
+    update_display_name,
     verify_csrf,
 )
-from app.views.auth import LoginRequest, UserView, user_view
+from app.services.access import client_ip
+from app.views.auth import LoginRequest, PasswordChangeRequest, ProfileUpdateRequest, UserView, user_view
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -59,6 +62,36 @@ def get_me(
     db: Annotated[Session, Depends(get_db)],
 ) -> UserView:
     return user_view(current_user(db, request))
+
+
+@router.patch("/profile", response_model=UserView, dependencies=[Depends(verify_csrf)])
+def update_profile(
+    payload: ProfileUpdateRequest,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+) -> UserView:
+    user = current_user(db, request)
+    return user_view(update_display_name(db, user, payload.display_name))
+
+
+@router.post(
+    "/password",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(verify_csrf)],
+)
+def update_password(
+    payload: PasswordChangeRequest,
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+) -> None:
+    user = current_user(db, request)
+    change_password(
+        db,
+        user,
+        payload.current_password,
+        payload.new_password,
+        client_ip(request),
+    )
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(verify_csrf)])

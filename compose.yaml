@@ -25,6 +25,8 @@ services:
     restart: unless-stopped
 
   phpmyadmin:
+    profiles:
+      - devtools
     image: phpmyadmin:5.2-apache
     environment:
       PMA_HOST: database
@@ -39,6 +41,33 @@ services:
       - data
     restart: unless-stopped
 
+  dev-seed:
+    profiles:
+      - devtools
+    image: mysql:8.4
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        set -eu;
+        MYSQL_PWD="$$MYSQL_PASSWORD" mysql --protocol=TCP --host=database
+        --user="$$MYSQL_USER" --database="$$MYSQL_DATABASE" < /seed.sql;
+        cp /sample-attachment.txt /attachments/00000000000000000000000000000001;
+        chmod 644 /attachments/00000000000000000000000000000001
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Set MYSQL_DATABASE in .env}
+      MYSQL_USER: ${MYSQL_USER:?Set MYSQL_USER in .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
+    volumes:
+      - ./infrastructure/database/dev/seed.sql:/seed.sql:ro
+      - ./infrastructure/database/dev/sample-attachment.txt:/sample-attachment.txt:ro
+      - attachments_data:/attachments
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - data
+    restart: "no"
+
   backend:
     build:
       context: ./src/backend
@@ -50,12 +79,22 @@ services:
       DB_USER: ${MYSQL_USER:?Set MYSQL_USER in .env}
       DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
       SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      ATTACHMENT_STORAGE_PATH: /var/lib/whatsup/attachments
+    volumes:
+      - attachments_data:/var/lib/whatsup/attachments
     depends_on:
       database:
         condition: service_healthy
     networks:
       - app
       - data
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
     healthcheck:
       test:
         - CMD
@@ -79,6 +118,13 @@ services:
         condition: service_healthy
     networks:
       - app
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
     healthcheck:
       test: [CMD, wget, -q, --spider, http://127.0.0.1:8080/healthz]
       interval: 5s
@@ -88,6 +134,7 @@ services:
 
 volumes:
   mysql_data:
+  attachments_data:
 
 networks:
   app:

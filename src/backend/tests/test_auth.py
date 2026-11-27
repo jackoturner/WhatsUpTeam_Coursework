@@ -159,6 +159,96 @@ def test_logout_revokes_database_session_and_clears_cookies(client, database):
     assert client.get("/api/auth/me").status_code == 401
 
 
+def test_authenticated_user_can_update_their_display_name(client, database):
+    client.post(
+        "/api/auth/login",
+        json={"username": "testuser", "password": "correct horse battery staple"},
+        headers=csrf_headers(client),
+    )
+
+    response = client.patch(
+        "/api/auth/profile",
+        json={"display_name": "  Updated Name  "},
+        headers=csrf_headers(client),
+    )
+
+    assert response.status_code == 200
+    assert response.json()["display_name"] == "Updated Name"
+    assert database.scalar(select(User)).display_name == "Updated Name"
+    assert client.patch(
+        "/api/auth/profile",
+        json={"display_name": " "},
+        headers=csrf_headers(client),
+    ).status_code == 422
+
+
+def test_password_change_requires_current_password_and_revokes_sessions(client, database):
+    client.post(
+        "/api/auth/login",
+        json={"username": "testuser", "password": "correct horse battery staple"},
+        headers=csrf_headers(client),
+    )
+
+    response = client.post(
+        "/api/auth/password",
+        json={
+            "current_password": "correct horse battery staple",
+            "new_password": "a different strong password",
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert response.status_code == 204
+    assert database.scalar(select(AuthSession)) is None
+    assert client.get("/api/auth/me").status_code == 401
+    assert verify_password("a different strong password", database.scalar(select(User)).password_hash)
+
+    old_password = client.post(
+        "/api/auth/login",
+        json={"username": "testuser", "password": "correct horse battery staple"},
+        headers=csrf_headers(client),
+    )
+    new_password = client.post(
+        "/api/auth/login",
+        json={"username": "testuser", "password": "a different strong password"},
+        headers=csrf_headers(client),
+    )
+
+    assert old_password.status_code == 401
+    assert new_password.status_code == 200
+
+
+def test_password_change_rejects_wrong_current_and_weak_or_reused_password(client):
+    client.post(
+        "/api/auth/login",
+        json={"username": "testuser", "password": "correct horse battery staple"},
+        headers=csrf_headers(client),
+    )
+
+    wrong_current = client.post(
+        "/api/auth/password",
+        json={"current_password": "wrong password", "new_password": "a different strong password"},
+        headers=csrf_headers(client),
+    )
+    weak_new = client.post(
+        "/api/auth/password",
+        json={"current_password": "correct horse battery staple", "new_password": "short"},
+        headers=csrf_headers(client),
+    )
+    same_new = client.post(
+        "/api/auth/password",
+        json={
+            "current_password": "correct horse battery staple",
+            "new_password": "correct horse battery staple",
+        },
+        headers=csrf_headers(client),
+    )
+
+    assert wrong_current.status_code == 403
+    assert weak_new.status_code == 422
+    assert same_new.status_code == 422
+
+
 def test_expired_session_is_rejected_and_removed(client, database):
     client.post(
         "/api/auth/login",

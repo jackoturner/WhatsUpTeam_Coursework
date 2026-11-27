@@ -43,11 +43,18 @@ CREATE TABLE message_reports (
     reporter_id INT NOT NULL,
     reason VARCHAR(500) NOT NULL,
     created_at BIGINT NOT NULL,
+    review_status VARCHAR(16) NOT NULL DEFAULT 'open',
+    reviewed_by_user_id INT NULL,
+    reviewed_at BIGINT NULL,
+    CONSTRAINT ck_message_reports_review_status
+        CHECK (review_status IN ('open', 'in_review', 'resolved')),
     CONSTRAINT uq_message_reports_message_reporter UNIQUE (message_id, reporter_id),
     CONSTRAINT fk_message_reports_message
         FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE,
     CONSTRAINT fk_message_reports_reporter
-        FOREIGN KEY (reporter_id) REFERENCES users (id) ON DELETE RESTRICT
+        FOREIGN KEY (reporter_id) REFERENCES users (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_message_reports_reviewer
+        FOREIGN KEY (reviewed_by_user_id) REFERENCES users (id) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 CREATE TABLE audit_events (
@@ -65,47 +72,31 @@ CREATE TABLE audit_events (
         FOREIGN KEY (actor_user_id) REFERENCES users (id) ON DELETE SET NULL
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
--- Demo users who appear in the sample conversations. Their password hash is not a valid
--- PBKDF2 value and they are inactive, so nobody can sign in as them.
-INSERT INTO users (username, display_name, password_hash, role, organisation_id, is_active)
-SELECT 'sarah', 'Sarah Jenkins', '!', 'employee', id, FALSE
-FROM organisations WHERE name = 'Demo Organisation';
-
-INSERT INTO users (username, display_name, password_hash, role, organisation_id, is_active)
-SELECT 'alex', 'Alex Carter', '!', 'employee', id, FALSE
-FROM organisations WHERE name = 'Demo Organisation';
-
-INSERT INTO users (username, display_name, password_hash, role, organisation_id, is_active)
-SELECT 'john', 'John Davies', '!', 'employee', id, FALSE
-FROM organisations WHERE name = 'Demo Organisation';
-
--- Conversation 1: group. Conversation 2: direct message between bob and John Davies.
-INSERT INTO conversations (id, organisation_id, kind, name, created_at)
-SELECT 1, id, 'group', 'Project team', UNIX_TIMESTAMP() FROM organisations WHERE name = 'Demo Organisation';
-
-INSERT INTO conversations (id, organisation_id, kind, name, created_at)
-SELECT 2, id, 'direct', NULL, UNIX_TIMESTAMP() FROM organisations WHERE name = 'Demo Organisation';
-
-INSERT INTO conversation_members (conversation_id, user_id)
-SELECT 1, id FROM users WHERE username IN ('bob', 'bobadmin', 'sarah', 'alex');
-
-INSERT INTO conversation_members (conversation_id, user_id)
-SELECT 2, id FROM users WHERE username IN ('bob', 'john');
-
-INSERT INTO messages (conversation_id, sender_id, body, created_at)
-SELECT 1, id, 'Morning all, the sprint review moved to 3pm.', UNIX_TIMESTAMP() - 7200
-FROM users WHERE username = 'sarah';
-
-INSERT INTO messages (conversation_id, sender_id, body, created_at)
-SELECT 1, id, 'Thanks, I will update the deck.', UNIX_TIMESTAMP() - 6600
-FROM users WHERE username = 'alex';
-
-INSERT INTO messages (conversation_id, sender_id, body, created_at)
-SELECT 2, id, 'Hi, can you check the shared folder for the latest file?', UNIX_TIMESTAMP() - 3600
-FROM users WHERE username = 'john';
-
-INSERT INTO messages (conversation_id, sender_id, body, created_at)
-SELECT 2, id,
-    'Hi team, I need the latest employee list with full names, contact numbers, and salary details. Please send it to my personal email at john.davies.consulting@gmail.com as soon as possible.',
-    UNIX_TIMESTAMP() - 1800
-FROM users WHERE username = 'john';
+CREATE TABLE stored_files (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    conversation_id INT NULL,
+    message_id INT NULL,
+    owner_user_id INT NULL,
+    uploaded_by_user_id INT NOT NULL,
+    storage_key CHAR(32) NOT NULL UNIQUE,
+    original_filename VARCHAR(255) NOT NULL,
+    content_type VARCHAR(100) NOT NULL,
+    size_bytes BIGINT NOT NULL,
+    is_confidential BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at BIGINT NOT NULL,
+    CONSTRAINT ck_stored_files_owner CHECK (
+        (conversation_id IS NOT NULL AND owner_user_id IS NULL) OR
+        (conversation_id IS NULL AND owner_user_id IS NOT NULL)
+    ),
+    CONSTRAINT fk_stored_files_conversation
+        FOREIGN KEY (conversation_id) REFERENCES conversations (id) ON DELETE CASCADE,
+    CONSTRAINT fk_stored_files_message
+        FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE,
+    CONSTRAINT fk_stored_files_owner
+        FOREIGN KEY (owner_user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT uq_stored_files_avatar UNIQUE (owner_user_id),
+    CONSTRAINT fk_stored_files_uploader
+        FOREIGN KEY (uploaded_by_user_id) REFERENCES users (id) ON DELETE RESTRICT,
+    INDEX ix_stored_files_conversation_id (conversation_id, id),
+    INDEX ix_stored_files_message_id (message_id)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;

@@ -1,105 +1,148 @@
-/* Dark palette matching the workspace shell (AppShell.module.css). */
 .page {
   display: grid;
   width: 100%;
   gap: 16px;
-  color: #f3efff;
 }
 
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  border-bottom: 1px solid #29243b;
+  gap: 18px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .tab {
+  min-height: 39px;
   margin-bottom: -1px;
-  padding: 10px 14px;
+  padding: 8px 3px;
   border: 0;
   border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
   background: transparent;
-  color: #aaa4bc;
   font: inherit;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 650;
   cursor: pointer;
 }
 
-.tab:hover { color: #f7f3ff; }
+.tab:hover {
+  color: var(--color-primary);
+}
 
 .tab[aria-selected="true"] {
-  border-bottom-color: #a36aff;
-  color: #d3b5ff;
+  border-bottom-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .card {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   min-width: 0;
-  padding: 16px;
-  border: 1px solid #302a43;
-  border-radius: 12px;
-  background: #171425;
+  padding: 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 9px;
 }
 
 .search {
   flex: 1 1 260px;
   min-width: 0;
-  min-height: 40px;
-  padding: 8px 12px;
-  border: 1px solid #3a3352;
-  border-radius: 10px;
-  background: #100d1c;
-  color: #f3efff;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #aebdcd;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  background: #fff;
   font: inherit;
+  font-size: 12px;
 }
 
-.search::placeholder { color: #7d7793; }
+.search::placeholder {
+  color: var(--color-text-muted);
+}
 
-.muted { margin: 0; color: #a7a0b7; }
+.toolbar select,
+.table select {
+  min-height: 36px;
+  padding: 6px 9px;
+  border: 1px solid #aebdcd;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.muted {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
 
 .notice {
   margin: 0;
-  padding: 12px 16px;
-  border: 1px solid #6b2c3d;
-  border-radius: 10px;
-  background: #2a1620;
-  color: #ffc9d3;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: #991b1b;
+  background: var(--color-danger-bg);
 }
 
-.tableWrap { overflow-x: auto; }
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
 
 .table {
   width: 100%;
+  min-width: 760px;
   border-collapse: collapse;
-  font-size: 0.92rem;
+  font-size: 12px;
 }
 
 .table th,
 .table td {
-  padding: 12px 10px;
-  border-bottom: 1px solid #302a43;
+  padding: 10px 9px;
+  border-bottom: 1px solid var(--color-divider);
   text-align: left;
   vertical-align: middle;
   overflow-wrap: anywhere;
 }
 
-.table th { color: #a7a0b7; font-weight: 700; }
+.table th {
+  color: var(--color-text-secondary);
+  background: var(--color-surface-subtle);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
-.nowrap { white-space: nowrap; }
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr:hover {
+  background: #f9fbfd;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
 
 .preview {
-  max-width: 28rem;
+  max-width: 25rem;
   margin: 0;
   overflow: hidden;
-  color: #e6e0f5;
+  color: var(--color-text-secondary);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -107,19 +150,29 @@
 .person {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   white-space: nowrap;
 }
 
 .avatar {
   display: grid;
+  width: 28px;
+  height: 28px;
   flex: none;
-  width: 30px;
-  height: 30px;
   place-items: center;
   border-radius: 50%;
-  background: #3a3352;
-  color: #f5f1ff;
-  font-size: 0.72rem;
+  color: var(--color-primary-active);
+  background: var(--color-blue-subtle);
+  font-size: 10px;
   font-weight: 700;
+}
+
+@media (max-width: 620px) {
+  .card {
+    padding: 10px;
+  }
+
+  .tabs {
+    gap: 12px;
+  }
 }

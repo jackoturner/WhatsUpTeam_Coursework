@@ -16,6 +16,7 @@ interface AuthContextValue {
   state: AuthState;
   login(username: string, password: string): Promise<void>;
   logout(): Promise<void>;
+  updateUser(user: User): void;
   /** Turns an API error into a message; an expired session sends the user to sign in. */
   handleError(error: unknown): string;
 }
@@ -49,6 +50,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [api],
   );
 
+  const updateUser = useCallback((user: User) => {
+    setState({ status: 'authenticated', user });
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await api.auth.logout();
@@ -68,8 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ state, login, logout, handleError }),
-    [state, login, logout, handleError],
+    () => ({ state, login, logout, updateUser, handleError }),
+    [state, login, logout, updateUser, handleError],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

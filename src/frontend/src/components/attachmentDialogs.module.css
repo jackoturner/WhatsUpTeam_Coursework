@@ -1,0 +1,138 @@
+.dialog {
+  width: min(94vw, 680px);
+  max-height: 90vh;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.dialog::backdrop {
+  background: rgb(11 31 53 / 55%);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.header p {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.close {
+  padding: 0 3px;
+  border: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:disabled {
+  cursor: not-allowed;
+}
+
+.previewNotice,
+.form {
+  margin: 0;
+  padding: 14px 18px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.previewNotice {
+  border-bottom: 1px solid var(--color-divider);
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
+}
+
+.preview {
+  display: grid;
+  min-height: 180px;
+  max-height: 70vh;
+  place-items: center;
+  padding: 12px;
+  background: var(--color-surface-subtle);
+}
+
+.preview img,
+.preview iframe {
+  width: 100%;
+  height: min(68vh, 640px);
+  border: 0;
+  object-fit: contain;
+  background: #fff;
+}
+
+.preview img {
+  height: auto;
+  max-height: 68vh;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.form p {
+  margin: 0;
+}
+
+.form label {
+  display: grid;
+  gap: 6px;
+  color: var(--color-text-primary);
+  font-weight: 650;
+}
+
+.form select {
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1px solid #aebdcd;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  background: #fff;
+  font: inherit;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-divider);
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+@media (max-width: 560px) {
+  .dialog {
+    width: calc(100vw - 20px);
+  }
+
+  .header,
+  .form,
+  .previewNotice {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}

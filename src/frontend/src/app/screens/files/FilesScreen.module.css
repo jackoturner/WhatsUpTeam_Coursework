@@ -1,0 +1,372 @@
+.page {
+  display: grid;
+  gap: 16px;
+}
+
+.pageTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.search {
+  flex: 1 1 240px;
+  min-width: 180px;
+}
+
+.search,
+.filters select,
+.dialogFields select {
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid #aebdcd;
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.filters select {
+  min-width: 145px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  padding: 10px 11px;
+  border-bottom: 1px solid var(--color-divider);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.table th {
+  color: var(--color-text-secondary);
+  background: var(--color-surface-subtle);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr:hover {
+  background: #f9fbfd;
+}
+
+.fileName {
+  display: flex;
+  min-width: 175px;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fileKind {
+  display: grid;
+  width: 30px;
+  height: 34px;
+  flex: 0 0 30px;
+  place-items: center;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  color: #b91c1c;
+  background: #fff7f7;
+  font-size: 8px;
+  font-weight: 750;
+}
+
+.confidential,
+.nonConfidential {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border: 1px solid #b7e4c4;
+  border-radius: 999px;
+  color: #14532d;
+  background: var(--color-green-subtle);
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.confidential svg {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+}
+
+.nonConfidential {
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-subtle);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.download,
+.rowActions button {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.download {
+  color: var(--color-primary-active);
+  text-decoration: none;
+}
+
+.download:hover {
+  text-decoration: underline;
+}
+
+.state,
+.empty {
+  margin: 0;
+  padding: 22px 10px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  font-size: 12px;
+}
+
+.error,
+.success {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+.error {
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  background: var(--color-danger-bg);
+}
+
+.success {
+  border: 1px solid #b7e4c4;
+  color: var(--color-success);
+  background: var(--color-green-subtle);
+}
+
+.dialog {
+  width: min(94vw, 540px);
+  max-height: min(90vh, 760px);
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.dialog::backdrop {
+  background: rgb(11 31 53 / 48%);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.dialogHeader h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.dialogHeader p {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.dialogClose {
+  padding: 0 3px;
+  border: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dropZone {
+  display: grid;
+  min-height: 145px;
+  justify-items: center;
+  align-content: center;
+  gap: 7px;
+  margin: 18px 20px;
+  padding: 16px;
+  border: 1px dashed #7b9cc0;
+  border-radius: var(--radius-md);
+  color: var(--color-primary-active);
+  background: #f7faff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropZone:focus-within {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.dropZone input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+}
+
+.dropZone svg {
+  width: 27px;
+  height: 27px;
+}
+
+.dropZone strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+.dropZone span {
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
+.dialogFields {
+  display: grid;
+  gap: 14px;
+  padding: 0 20px;
+}
+
+.dialogFields > label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.dialogFields fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.dialogFields legend {
+  padding: 0 4px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.dialogFields fieldset label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.dialogFields input {
+  accent-color: var(--color-primary);
+}
+
+.dialogError {
+  margin: 14px 20px 0;
+  color: var(--color-danger);
+  font-size: 12px;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--color-divider);
+  background: var(--color-surface-subtle);
+}
+
+@media (max-width: 620px) {
+  .pageTop {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pageTop button {
+    width: 100%;
+  }
+
+  .filters select {
+    flex: 1;
+  }
+
+  .dialog {
+    width: calc(100vw - 20px);
+  }
+
+  .dialogHeader,
+  .dialogActions {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .dropZone {
+    margin: 14px;
+  }
+
+  .dialogFields {
+    padding: 0 14px;
+  }
+}

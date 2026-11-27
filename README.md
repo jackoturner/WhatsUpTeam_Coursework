@@ -1,91 +1,26 @@
-# WhatsUpTeam_Coursework
-A basic chatting webpage that has been secured as part of our Secure Software Development Module at Roehampton.
+# WhatsUpTeam Coursework
 
-## Development
+A secure corporate messaging application built for the Secure Software Development
+module at Roehampton.
 
-Start Docker's Linux container engine, then run this from the repository root:
+## Run locally
+
+Start Docker Desktop, then from the repository root run:
 
 ```sh
 npm run dev
 ```
 
-The command creates `.env` from `.env.example` if needed, builds the development
-images, and starts MySQL, phpMyAdmin, FastAPI, and Vite. Open **http://localhost:3000**.
-To view or edit the local MySQL database, open **http://localhost:8081** in your browser
-and sign in with `MYSQL_USER` and `MYSQL_PASSWORD` from `.env` (the example values work
-for local development).
-The terminal stays attached to the logs; **Ctrl+C** stops the services.
+Open the app at [http://localhost:3000](http://localhost:3000). For database
+access, open [phpMyAdmin](http://localhost:8081). Local setup, test accounts,
+database behavior and troubleshooting are explained in the guides below.
 
-Hot reload is enabled by default through `compose.override.yaml`:
+## Guides
 
-- Changes under `frontend/src/` update the browser through Vite and React Fast
-  Refresh. The HTML and Vite/TypeScript configuration files are also mounted.
-- Changes under `backend/app/` restart Uvicorn automatically. Subsequent API
-  requests use the updated Python code.
-- Polling detects edits made through Windows and Docker Desktop reliably.
-
-Source files are mounted read-only in the containers. Node dependencies stay
-inside the frontend image, so a host `node_modules` folder is not required.
-After changing npm packages, Python requirements, Docker configuration, or `.env`,
-restart `npm run dev` to rebuild or recreate the affected services.
-
-For detached development, use `docker compose up --build --detach --wait`.
-Use `npm run logs` to follow logs and `npm run stop` to stop the stack. Database
-data is preserved when stopping services. MySQL stores its data in Docker's
-`mysql_data` named volume rather than a folder in the repository; this avoids
-committing database files and lets Docker manage the database format. Use phpMyAdmin
-or SQL scripts to inspect and change data, rather than editing the volume files directly.
-The phpMyAdmin port is bound to this computer only; set `PHPMYADMIN_PORT` in `.env`
-to change its host port.
-
-Run frontend type checking and the production asset build with
-`npm --prefix frontend run build`. Vite transforms TypeScript during development;
-the separate build command performs the TypeScript checks.
-
-## Static runtime build
-
-To use the runtime images with Nginx and Uvicorn without source mounts, select
-the base Compose file explicitly:
-
-```sh
-docker compose -f compose.yaml up --build --detach --wait
-```
-
-Running `npm run dev` switches the stack back to development mode.
-
-## Sign-in and tests
-
-The login screen is at **/login** and uses the FastAPI authentication API:
-
-- `POST /api/auth/login` verifies a username and password and sets an HttpOnly session cookie.
-- `POST /api/auth/logout` revokes the current database session.
-- `GET /api/auth/me` returns the authenticated user or `401`.
-
-Passwords are stored as PBKDF2-HMAC-SHA256 hashes. Session tokens are random, expire
-after eight hours, and are stored hashed in MySQL. State-changing authentication requests
-use a double-submit CSRF token. The local Compose stack disables the cookie `Secure` flag
-for HTTP development; set `SESSION_COOKIE_SECURE=true` when serving the app over HTTPS.
-Login attempts are limited to five per client IP per minute in the backend process; use a
-shared rate-limit store if deploying multiple backend workers or instances.
-
-The MySQL init script creates the authentication tables and seeds two demo users into a
-new database volume: `bob` (employee) and `bobadmin` (organisation admin), both with the
-password `password`. Their passwords are stored as salted PBKDF2 hashes in
-[`001_auth.sql`](infrastructure/database/init/001_auth.sql). These fixed-password accounts
-are for local development only; never use them in a deployed environment. Init scripts
-only run automatically for a new `mysql_data` volume, so an existing volume will not be
-seeded automatically.
-
-Provision real users through an approved administrative process, storing `password_hash`
-values produced by `app.services.auth.hash_password`. For databases whose `mysql_data`
-volume already exists, apply
-[`001_auth.sql`](infrastructure/database/init/001_auth.sql) once manually if needed.
-
-Run the backend authentication tests locally from `src/backend` with `python -m pytest`.
-To run the browser smoke and acceptance tests:
-
-```sh
-bash test/run-tests.sh
-```
-
-See [test/README.md](test/README.md) for Docker and PowerShell commands.
+- [Development and testing](docs/development/README.md)
+- [Database and sample data](docs/database/README.md)
+- [Application features and permissions](docs/application/README.md)
+- [Deployment guidance](docs/deployment/README.md)
+- [Security verification plan](docs/security-verification.md)
+- [Project overview](docs/overview.md)
+- [Project development plan](docs/project-development-plan.md)

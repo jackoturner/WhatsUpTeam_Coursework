@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from app.models.auth_session import AuthSession
 from app.models.user import User
+from app.services.audit import record_event
 
 SESSION_COOKIE = "session_token"
 CSRF_COOKIE = "csrf_token"
@@ -103,6 +104,41 @@ def authenticate(db: Session, username: str, password: str) -> User:
     if user is None or not user.is_active or not password_valid:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=LOGIN_FAILURE)
     return user
+
+
+def update_display_name(db: Session, user: User, display_name: str) -> User:
+    user.display_name = display_name.strip()
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def change_password(
+    db: Session,
+    user: User,
+    current_password: str,
+    new_password: str,
+    source_ip: str,
+) -> None:
+    if not verify_password(current_password, user.password_hash):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Current password is incorrect.")
+    if hmac.compare_digest(current_password.encode("utf-8"), new_password.encode("utf-8")):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="New password must be different from the current password.",
+        )
+
+    user.password_hash = hash_password(new_password)
+    record_event(
+        db,
+        event_type="password_changed",
+        organisation_id=user.organisation_id,
+        actor_user_id=user.id,
+        source_ip=source_ip,
+        details="User changed their password.",
+    )
+    db.execute(delete(AuthSession).where(AuthSession.user_id == user.id))
+    db.commit()
 
 
 def create_session(db: Session, user: User, response: Response) -> None:
